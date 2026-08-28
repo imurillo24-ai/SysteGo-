@@ -4,11 +4,30 @@ La aplicación tendrá la siguientes pantallas
 
 1. Pantalla 1: Pantalla de niveles
 
-![screen1](docs/images/WhatsApp Image 2026-08-28 at 9.59.29 AM.jpeg)
 
-2. Pantalla : Pantalla de explicacion
+![Niveles](images/NIVELES.jpeg)
 
-![screen1](docs/images/WhatsApp Image 2026-08-28 at 9.59.57 AM.jpeg)
+2. Pantalla 2: Pantalla de explicacion
+
+
+![Explicación](images/EXPLICACION.jpeg)
+
+3. Pantalla 3: Preguntas
+
+
+![Preguntas](images/PREGUNTAS.jpeg)
+
+
+
+
+
+
+4. Pantalla. Correcta o Incorrecta
+
+
+![Interfaz 2](images/interfaz2.jpeg)
+
+
 
 # Referencias
 
