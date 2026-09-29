@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+*.hprof
+.gradle/
+build/
+app/build/
