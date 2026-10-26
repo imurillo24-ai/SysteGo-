@@ -1,12 +1,22 @@
+@file:Suppress("unused")
+
 package com.tuempresa.engineerio.domain.model
 
-// ENUMS (Reemplazan los union types de TypeScript)
-enum class ViewMode { MAP, THEORY, QUIZ, PRACTICE, LEADERBOARD, PROFILE }
+// ENUMS
+enum class ViewMode { LOGIN, MAP, THEORY, QUIZ, PRACTICE, LEADERBOARD, PROFILE }
 enum class NodeStatus { COMPLETED, CURRENT, LOCKED }
 enum class NodeType { THEORY, QUIZ, CHEST }
 enum class TrendChange { UP, DOWN, SAME }
 
-// DATA CLASSES (Reemplazan las interfaces de TypeScript)
+// DATA CLASSES
+data class UserProfile(
+    val fullName: String,
+    val nickname: String,
+    val avatarEmoji: String = "⚡",
+    val titleRole: String = "Arquitecto de Sistemas",
+    val level: Int = 1,
+)
+
 data class CourseUnit(
     val id: String,
     val unitNumber: Int,
@@ -15,13 +25,13 @@ data class CourseUnit(
     val progressPercent: Int,
     val totalLessons: Int,
     val completedLessons: Int,
-    val colorScheme: UnitColorScheme
+    val colorScheme: UnitColorScheme,
 )
 
 data class UnitColorScheme(
     val primary: String,
     val border: String,
-    val glow: String
+    val glow: String,
 )
 
 data class LessonNode(
@@ -33,7 +43,7 @@ data class LessonNode(
     val type: NodeType,
     val icon: String,
     val xpReward: Int,
-    val xOffset: Int
+    val xOffset: Int,
 )
 
 data class TheoryModule(
@@ -48,7 +58,7 @@ data class TheoryModule(
     val figureUrl: String,
     val summary: String,
     val keyConcepts: List<KeyConcept>,
-    val architecturePoints: List<ArchitecturePoint>
+    val architecturePoints: List<ArchitecturePoint>,
 )
 
 data class KeyConcept(
@@ -56,28 +66,28 @@ data class KeyConcept(
     val name: String,
     val icon: String,
     val color: String, // Se guarda como String (Hex) para mantener la pureza del dominio
-    val explanation: String
+    val explanation: String,
 )
 
 data class ArchitecturePoint(
     val title: String,
-    val detail: String
+    val detail: String,
 )
 
 data class QuizOption(
     val id: String,
     val label: String,
-    val text: String
+    val text: String,
 )
 
 data class CodeSnippet(
     val language: String,
-    val lines: List<CodeLine>
+    val lines: List<CodeLine>,
 )
 
 data class CodeLine(
     val text: String,
-    val highlight: String = "normal" // 'keyword', 'string', 'blank', etc.
+    val highlight: String = "normal", // 'keyword', 'string', 'blank', etc.
 )
 
 data class QuizQuestion(
@@ -89,7 +99,7 @@ data class QuizQuestion(
     val options: List<QuizOption>,
     val correctOptionId: String,
     val explanation: String,
-    val xpReward: Int
+    val xpReward: Int,
 )
 
 data class UserStats(
@@ -101,7 +111,7 @@ data class UserStats(
     val activeUnitId: String,
     val accuracyRate: Int,
     val questionsAnswered: Int,
-    val soundEnabled: Boolean
+    val soundEnabled: Boolean,
 )
 
 data class LeaderboardUser(
@@ -112,7 +122,7 @@ data class LeaderboardUser(
     val xp: Int,
     val avatar: String,
     val isCurrentUser: Boolean = false,
-    val change: TrendChange
+    val change: TrendChange,
 )
 
 data class Badge(
@@ -121,5 +131,5 @@ data class Badge(
     val description: String,
     val icon: String,
     val unlocked: Boolean,
-    val unlockedAt: String? = null
+    val unlockedAt: String? = null,
 )

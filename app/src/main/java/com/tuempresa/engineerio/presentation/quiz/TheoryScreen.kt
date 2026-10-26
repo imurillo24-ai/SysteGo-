@@ -193,6 +193,7 @@ fun TheoryScreen(
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .background(SurfaceDark)
+                .navigationBarsPadding()
                 .border(1.dp, BorderDark)
                 .padding(16.dp)
         ) {
