@@ -1,6 +1,6 @@
 SysteGo!
-
-Es una aplicación móvil nativa para Android orientada a la evaluación interactiva y gamificada de fundamentos en Ingeniería de Sistemas. El sistema opera completamente offline, utilizando un modelo de regresión lineal donde el usuario debe superar módulos teóricos y prácticos para desbloquear contenido avanzado. A través de ciclos rápidos de preguntas cerradas, la aplicación valida conocimientos empíricos en lógica de programación, arquitectura orientada a objetos y diseño de bases de datos relacionales, garantizando la retención de conceptos mediante un sistema de retroalimentación inmediata y persistencia de estado local.
+Es una aplicación móvil nativa para Android que permite aprender y reforzar conceptos de Ingeniería de Sistemas mediante lecciones teóricas, cuestionarios interactivos y mecánicas de gamificación.
+La aplicación organiza el aprendizaje en módulos y secciones temáticas que incluyen fundamentos de arquitectura de sistemas, programación orientada a objetos y otros conceptos tecnológicos. El usuario puede consultar contenidos teóricos, responder preguntas de selección múltiple, recibir retroalimentación sobre sus respuestas y avanzar en el mapa de aprendizaje según su progreso.
 
 Autor(es): Isabella Murillo, Santiago Pestana 
 ## Referencias
