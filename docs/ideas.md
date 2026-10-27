@@ -11,7 +11,7 @@ Aplicaciones similares:
 
 ## Idea 2 IngeDuo
 
-Aprende sobre todo lo relacionado con ingeniería de sistemas con ejercicios teóricos y prácticos que te harán guardar la información de manera mas fácil y didáctica, pon a prueba tus conocimientos con esta aplicación.
+Es una aplicación móvil orientada a la evaluación interactiva y gamificada de fundamentos en Ingeniería de Sistemas. El sistema opera completamente offline, utilizando un modelo de regresión lineal donde el usuario debe superar módulos teóricos y prácticos para desbloquear contenido avanzado. A través de ciclos rápidos de preguntas cerradas, la aplicación valida conocimientos empíricos en lógica de programación, arquitectura orientada a objetos y diseño de bases de datos relacionales, garantizando la retención de conceptos mediante un sistema de retroalimentación inmediata y persistencia de estado local.
 
 Aplicaciones similares:
 
