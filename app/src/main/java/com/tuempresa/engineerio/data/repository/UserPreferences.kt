@@ -3,54 +3,55 @@ package com.tuempresa.engineerio.data.repository
 import android.content.Context
 import android.content.SharedPreferences
 import com.tuempresa.engineerio.domain.model.UserProfile
+import com.tuempresa.engineerio.domain.model.UserStats
 
 class UserPreferences(context: Context) {
-
-    private val prefs: SharedPreferences = context.getSharedPreferences("systego_prefs", Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences("systego_user_prefs", Context.MODE_PRIVATE)
 
     fun getUserProfile(): UserProfile? {
-        val fullName = prefs.getString(KEY_FULL_NAME, null) ?: return null
-        val nickname = prefs.getString(KEY_NICKNAME, "") ?: ""
-        val avatar = prefs.getString(KEY_AVATAR, "⚡") ?: "⚡"
-        val role = prefs.getString(KEY_ROLE, "Arquitecto de Sistemas") ?: "Arquitecto de Sistemas"
-        val level = prefs.getInt(KEY_LEVEL, 1)
-
-        return UserProfile(
-            fullName = fullName,
-            nickname = nickname,
-            avatarEmoji = avatar,
-            titleRole = role,
-            level = level
-        )
+        val name = prefs.getString("user_name", null) ?: return null
+        val nickname = prefs.getString("user_nickname", "@usuario") ?: "@usuario"
+        val avatar = prefs.getString("user_avatar", "⚡") ?: "⚡"
+        val role = prefs.getString("user_role", "Ingeniero SysteGo") ?: "Ingeniero SysteGo"
+        return UserProfile(fullName = name, nickname = nickname, avatarEmoji = avatar, titleRole = role)
     }
 
     fun saveUserProfile(profile: UserProfile) {
         prefs.edit().apply {
-            putString(KEY_FULL_NAME, profile.fullName)
-            putString(KEY_NICKNAME, profile.nickname)
-            putString(KEY_AVATAR, profile.avatarEmoji)
-            putString(KEY_ROLE, profile.titleRole)
-            putInt(KEY_LEVEL, profile.level)
+            putString("user_name", profile.fullName)
+            putString("user_nickname", profile.nickname)
+            putString("user_avatar", profile.avatarEmoji)
+            putString("user_role", profile.titleRole)
             apply()
         }
     }
 
     fun clearProfile() {
-        prefs.edit().apply {
-            remove(KEY_FULL_NAME)
-            remove(KEY_NICKNAME)
-            remove(KEY_AVATAR)
-            remove(KEY_ROLE)
-            remove(KEY_LEVEL)
-            apply()
-        }
+        prefs.edit().clear().apply()
     }
 
-    companion object {
-        private const val KEY_FULL_NAME = "key_full_name"
-        private const val KEY_NICKNAME = "key_nickname"
-        private const val KEY_AVATAR = "key_avatar"
-        private const val KEY_ROLE = "key_role"
-        private const val KEY_LEVEL = "key_level"
+    // --- PERSISTENCIA DE ESTADÍSTICAS Y GAMIFICACIÓN ---
+
+    fun getUserStats(): UserStats {
+        val xp = prefs.getInt("user_xp", 0)
+        val hearts = prefs.getInt("user_hearts", 5)
+        val completedNodesString = prefs.getString("completed_nodes", "node-oop") ?: "node-oop"
+        val completedNodesList = completedNodesString.split(",").filter { it.isNotBlank() }
+
+        return CourseRepository.initialUserStats.copy(
+            xp = xp,
+            hearts = hearts,
+            completedNodeIds = completedNodesList
+        )
+    }
+
+    fun saveUserStats(stats: UserStats) {
+        prefs.edit().apply {
+            putInt("user_xp", stats.xp)
+            putInt("user_hearts", stats.hearts)
+            putString("completed_nodes", stats.completedNodeIds.joinToString(","))
+            apply()
+        }
     }
 }

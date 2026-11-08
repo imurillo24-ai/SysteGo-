@@ -39,7 +39,8 @@ class MainActivity : ComponentActivity() {
                 var activeLessonId by remember { mutableStateOf("node-oop") }
                 var activeUnitId by remember { mutableStateOf("unit-1") }
 
-                var userStats by remember { mutableStateOf(CourseRepository.initialUserStats) }
+                // 1. Cargar estadísticas persistentes al iniciar la app
+                var userStats by remember { mutableStateOf(userPrefs.getUserStats()) }
                 var units by remember { mutableStateOf(CourseRepository.unitsData) }
                 var nodes by remember { mutableStateOf(CourseRepository.lessonNodesData) }
 
@@ -67,27 +68,23 @@ class MainActivity : ComponentActivity() {
                         if (u.id == activeUnitId) u.copy(progressPercent = newProgress) else u
                     }
 
-                    userStats = userStats.copy(
+                    val updatedStats = userStats.copy(
                         xp = userStats.xp + earnedXp,
                         completedNodeIds = if (lessonId in userStats.completedNodeIds) userStats.completedNodeIds else userStats.completedNodeIds + lessonId
                     )
+                    userStats = updatedStats
+
+                    // 2. Guardar progreso al completar lección
+                    userPrefs.saveUserStats(updatedStats)
                 }
 
                 Scaffold(
                     topBar = {
                         if (viewMode != ViewMode.LOGIN) {
                             TopNav(
-                                viewMode = viewMode.name,
-                                xp = userStats.xp,
-                                hearts = userStats.hearts,
-                                soundEnabled = userStats.soundEnabled,
-                                onToggleSound = {
-                                    userStats = userStats.copy(soundEnabled = !userStats.soundEnabled)
-                                },
-                                onCloseLesson = { viewMode = ViewMode.MAP },
-                                onOpenDrawer = { viewMode = ViewMode.PROFILE },
-                                userProfile = currentUserProfile,
-                                onOpenProfile = { viewMode = ViewMode.PROFILE }
+                                userStats = userStats,
+                                onProfileClick = { viewMode = ViewMode.PROFILE },
+                                onMapClick = { viewMode = ViewMode.MAP }
                             )
                         }
                     }
@@ -153,7 +150,12 @@ class MainActivity : ComponentActivity() {
                                     onExit = { viewMode = ViewMode.MAP },
                                     currentHearts = userStats.hearts,
                                     onDeductHeart = {
-                                        userStats = userStats.copy(hearts = maxOf(0, userStats.hearts - 1))
+                                        val updatedHearts = maxOf(0, userStats.hearts - 1)
+                                        val updatedStats = userStats.copy(hearts = updatedHearts)
+                                        userStats = updatedStats
+
+                                        // 3. Guardar vidas actualizadas en almacenamiento
+                                        userPrefs.saveUserStats(updatedStats)
                                     }
                                 )
                             }
