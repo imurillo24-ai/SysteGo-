@@ -6,7 +6,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -32,16 +35,79 @@ fun QuizScreen(
     var selectedOptionId by remember { mutableStateOf<String?>(null) }
     var isAnswerChecked by remember { mutableStateOf(false) }
     var totalXpEarned by remember { mutableStateOf(0) }
+    var showExitDialog by remember { mutableStateOf(false) }
 
     val currentQuestion = questions.getOrElse(currentIndex) { questions.first() }
     val progressPercent = ((currentIndex + 1).toFloat() / questions.size) * 100
     val isCurrentCorrect = selectedOptionId == currentQuestion.correctOptionId
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(BackgroundDark)
     ) {
+        // Barra Superior de Salida y Contador de Vidas
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(SurfaceDark)
+                .statusBarsPadding()
+                .border(1.dp, BorderDark)
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable { showExitDialog = true }
+            ) {
+                IconButton(
+                    onClick = { showExitDialog = true },
+                    modifier = Modifier
+                        .size(36.dp)
+                        .background(SurfaceLight, CircleShape)
+                        .border(1.dp, BorderDark, CircleShape)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Salir del quiz",
+                        tint = TextPrimary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Salir",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = TextSecondary
+                )
+            }
+
+            // Indicador de Vidas Activas
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier
+                    .background(SurfaceLight, RoundedCornerShape(20.dp))
+                    .border(1.dp, BorderDark, RoundedCornerShape(20.dp))
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
+            ) {
+                Text(text = "❤️", fontSize = 14.sp)
+                Text(
+                    text = "$currentHearts",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Black,
+                    color = ErrorPink
+                )
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+        ) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -219,4 +285,48 @@ fun QuizScreen(
             }
         }
     }
+
+    // Modal de Confirmación para Salir de la Lección
+    if (showExitDialog) {
+        AlertDialog(
+            onDismissRequest = { showExitDialog = false },
+            containerColor = SurfaceGlass,
+            title = {
+                Text(
+                    text = "¿Salir de la lección?",
+                    color = TextPrimary,
+                    fontWeight = FontWeight.Black,
+                    fontSize = 18.sp
+                )
+            },
+            text = {
+                Text(
+                    text = "Si sales ahora, perderás tu progreso actual en este cuestionario.",
+                    color = TextSecondary,
+                    fontSize = 13.sp
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showExitDialog = false
+                        onExit()
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = ErrorPink),
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text(text = "Salir", color = Color.White, fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showExitDialog = false }) {
+                    Text(text = "Continuar", color = PrimaryCyan, fontWeight = FontWeight.Bold)
+                }
+            }
+        )
+    }
 }
+}
+
+
+

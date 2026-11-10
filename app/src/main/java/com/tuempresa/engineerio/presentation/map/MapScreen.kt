@@ -173,19 +173,31 @@ fun MapScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                availableUnits.forEach { unit ->
+                                availableUnits.forEachIndexed { index, unit ->
                                     val isSelected = unit.id == activeUnit.id
+                                    val isUnlocked = index == 0 || availableUnits.take(index).all { it.progressPercent >= 100 }
+
                                     Box(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .clip(RoundedCornerShape(12.dp))
-                                            .background(if (isSelected) PrimaryCyan.copy(alpha = 0.15f) else SurfaceDark)
+                                            .background(
+                                                when {
+                                                    isSelected -> PrimaryCyan.copy(alpha = 0.15f)
+                                                    !isUnlocked -> SurfaceDark.copy(alpha = 0.5f)
+                                                    else -> SurfaceDark
+                                                }
+                                            )
                                             .border(
                                                 1.dp,
-                                                if (isSelected) PrimaryCyan else BorderDark,
+                                                when {
+                                                    isSelected -> PrimaryCyan
+                                                    !isUnlocked -> BorderDark.copy(alpha = 0.3f)
+                                                    else -> BorderDark
+                                                },
                                                 RoundedCornerShape(12.dp)
                                             )
-                                            .clickable {
+                                            .clickable(enabled = isUnlocked) {
                                                 onSelectUnit(unit.id)
                                                 showUnitSelector = false
                                             }
@@ -194,14 +206,29 @@ fun MapScreen(
                                         Column {
                                             Row(
                                                 modifier = Modifier.fillMaxWidth(),
-                                                horizontalArrangement = Arrangement.SpaceBetween
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
                                             ) {
-                                                Text(
-                                                    text = unit.title,
-                                                    fontWeight = FontWeight.Bold,
-                                                    color = TextPrimary,
-                                                    fontSize = 14.sp
-                                                )
+                                                Row(
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                                ) {
+                                                    if (!isUnlocked) {
+                                                        Icon(
+                                                            imageVector = Icons.Default.Lock,
+                                                            contentDescription = "Sección bloqueada",
+                                                            tint = TextSecondary,
+                                                            modifier = Modifier.size(16.dp)
+                                                        )
+                                                    }
+                                                    Text(
+                                                        text = unit.title,
+                                                        fontWeight = FontWeight.Bold,
+                                                        color = if (isUnlocked) TextPrimary else TextSecondary,
+                                                        fontSize = 14.sp
+                                                    )
+                                                }
+
                                                 if (isSelected) {
                                                     Text(
                                                         text = "ACTIVO",
@@ -209,10 +236,25 @@ fun MapScreen(
                                                         color = PrimaryCyan,
                                                         fontSize = 10.sp
                                                     )
+                                                } else if (!isUnlocked) {
+                                                    Text(
+                                                        text = "BLOQUEADO",
+                                                        fontWeight = FontWeight.ExtraBold,
+                                                        color = ErrorPink.copy(alpha = 0.8f),
+                                                        fontSize = 10.sp
+                                                    )
+                                                } else if (unit.progressPercent >= 100) {
+                                                    Text(
+                                                        text = "COMPLETADO",
+                                                        fontWeight = FontWeight.ExtraBold,
+                                                        color = SuccessGreen,
+                                                        fontSize = 10.sp
+                                                    )
                                                 }
                                             }
+                                            Spacer(modifier = Modifier.height(4.dp))
                                             Text(
-                                                text = unit.description,
+                                                text = if (isUnlocked) unit.description else "Completa la Sección ${unit.unitNumber - 1} al 100% para desbloquear",
                                                 fontSize = 11.sp,
                                                 color = TextSecondary,
                                                 maxLines = 1

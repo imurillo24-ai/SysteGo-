@@ -16,7 +16,7 @@ private val DarkColorScheme = darkColorScheme(
     onPrimary = SurfaceDark,
     onBackground = TextPrimary,
     onSurface = TextPrimary,
-    error = ErrorPink
+    error = ErrorPink,
 )
 
 @Composable
@@ -25,6 +25,7 @@ fun SysteGoTheme(content: @Composable () -> Unit) {
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
+            @Suppress("DEPRECATION")
             window.statusBarColor = SurfaceDark.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
         }
@@ -33,6 +34,6 @@ fun SysteGoTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = DarkColorScheme,
         typography = AppTypography,
-        content = content
+        content = content,
     )
 }

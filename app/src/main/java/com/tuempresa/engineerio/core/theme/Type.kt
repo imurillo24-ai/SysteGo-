@@ -13,12 +13,12 @@ val AppTypography = Typography(
         fontFamily = OutfitFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        color = TextPrimary
+        color = TextPrimary,
     ),
     titleLarge = TextStyle(
         fontFamily = OutfitFontFamily,
         fontWeight = FontWeight.ExtraBold,
         fontSize = 24.sp,
-        color = TextPrimary
-    )
+        color = TextPrimary,
+    ),
 )

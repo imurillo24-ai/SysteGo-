@@ -41,8 +41,30 @@ class MainActivity : ComponentActivity() {
 
                 // 1. Cargar estadísticas persistentes al iniciar la app
                 var userStats by remember { mutableStateOf(userPrefs.getUserStats()) }
-                var units by remember { mutableStateOf(CourseRepository.unitsData) }
-                var nodes by remember { mutableStateOf(CourseRepository.lessonNodesData) }
+                var nodes by remember {
+                    mutableStateOf(
+                        CourseRepository.lessonNodesData.map { node ->
+                            if (node.id in userStats.completedNodeIds) {
+                                node.copy(status = com.tuempresa.engineerio.domain.model.NodeStatus.COMPLETED)
+                            } else node
+                        }
+                    )
+                }
+
+                fun calculateUnits(allNodes: List<com.tuempresa.engineerio.domain.model.LessonNode>): List<com.tuempresa.engineerio.domain.model.CourseUnit> {
+                    return CourseRepository.unitsData.map { unit ->
+                        val unitNodes = allNodes.filter { it.unitId == unit.id }
+                        val completedCount = unitNodes.count { it.status == com.tuempresa.engineerio.domain.model.NodeStatus.COMPLETED }
+                        val progress = if (unitNodes.isNotEmpty()) ((completedCount.toFloat() / unitNodes.size) * 100).toInt() else 0
+                        unit.copy(
+                            progressPercent = progress,
+                            completedLessons = completedCount,
+                            totalLessons = if (unitNodes.isNotEmpty()) unitNodes.size else unit.totalLessons
+                        )
+                    }
+                }
+
+                var units by remember { mutableStateOf(calculateUnits(nodes)) }
 
                 val activeUnit = units.find { it.id == activeUnitId } ?: units.first()
                 val currentTheoryModule = CourseRepository.theoryModules[activeLessonId] ?: CourseRepository.theoryModules.values.first()
@@ -60,13 +82,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     nodes = updatedNodes
-
-                    val completedCount = updatedNodes.count { it.status == com.tuempresa.engineerio.domain.model.NodeStatus.COMPLETED }
-                    val newProgress = ((completedCount.toFloat() / updatedNodes.size) * 100).toInt()
-
-                    units = units.map { u ->
-                        if (u.id == activeUnitId) u.copy(progressPercent = newProgress) else u
-                    }
+                    units = calculateUnits(updatedNodes)
 
                     val updatedStats = userStats.copy(
                         xp = userStats.xp + earnedXp,
@@ -118,7 +134,7 @@ class MainActivity : ComponentActivity() {
                             ViewMode.MAP -> {
                                 MapScreen(
                                     activeUnit = activeUnit,
-                                    nodes = nodes,
+                                    nodes = nodes.filter { it.unitId == activeUnitId },
                                     onStartTheory = { lessonId ->
                                         activeLessonId = lessonId
                                         viewMode = ViewMode.THEORY
@@ -128,7 +144,11 @@ class MainActivity : ComponentActivity() {
                                         viewMode = ViewMode.QUIZ
                                     },
                                     onSelectUnit = { unitId ->
-                                        activeUnitId = unitId
+                                        val targetIndex = units.indexOfFirst { it.id == unitId }
+                                        val isUnlocked = targetIndex == 0 || units.take(targetIndex).all { it.progressPercent >= 100 }
+                                        if (isUnlocked) {
+                                            activeUnitId = unitId
+                                        }
                                     },
                                     availableUnits = units
                                 )

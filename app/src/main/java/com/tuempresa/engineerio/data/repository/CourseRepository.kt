@@ -106,6 +106,74 @@ object CourseRepository {
             icon = "inventory_2",
             xpReward = 50,
             xOffset = 0
+        ),
+        // --- NODOS SECCIÓN 2 ---
+        LessonNode(
+            id = "node-microservices",
+            unitId = "unit-2",
+            title = "Microservicios y API Gateways",
+            subtitle = "Descomposición de Monolitos y Enrutamiento",
+            status = NodeStatus.CURRENT,
+            type = NodeType.THEORY,
+            icon = "dns",
+            xpReward = 20,
+            xOffset = -30
+        ),
+        LessonNode(
+            id = "node-consensus",
+            unitId = "unit-2",
+            title = "Consenso Distribuido",
+            subtitle = "Protocolos Raft, Paxos y Tolerancia a Fallos",
+            status = NodeStatus.LOCKED,
+            type = NodeType.QUIZ,
+            icon = "psychology",
+            xpReward = 25,
+            xOffset = 40
+        ),
+        LessonNode(
+            id = "node-chest-2",
+            unitId = "unit-2",
+            title = "Cofre de la Sección 2",
+            subtitle = "Reclamar Título de Ing. Distribuido",
+            status = NodeStatus.LOCKED,
+            type = NodeType.CHEST,
+            icon = "inventory_2",
+            xpReward = 60,
+            xOffset = 0
+        ),
+        // --- NODOS SECCIÓN 3 ---
+        LessonNode(
+            id = "node-cache",
+            unitId = "unit-3",
+            title = "Estrategias de Caché",
+            subtitle = "Redis, Memcached y Políticas LRU/LFU",
+            status = NodeStatus.CURRENT,
+            type = NodeType.THEORY,
+            icon = "book",
+            xpReward = 25,
+            xOffset = -30
+        ),
+        LessonNode(
+            id = "node-concurrency",
+            unitId = "unit-3",
+            title = "Alta Concurrencia",
+            subtitle = "Bloqueos pesimistas vs optimistas y Mutex",
+            status = NodeStatus.LOCKED,
+            type = NodeType.QUIZ,
+            icon = "psychology",
+            xpReward = 30,
+            xOffset = 30
+        ),
+        LessonNode(
+            id = "node-chest-3",
+            unitId = "unit-3",
+            title = "Cofre de la Sección 3",
+            subtitle = "Reclamar Título de Máster de Sistemas",
+            status = NodeStatus.LOCKED,
+            type = NodeType.CHEST,
+            icon = "inventory_2",
+            xpReward = 80,
+            xOffset = 0
         )
     )
 
@@ -149,6 +217,71 @@ object CourseRepository {
                 ArchitecturePoint(
                     title = "Consistencia vs Disponibilidad (CAP)",
                     detail = "Ante particiones de red, los sistemas deben elegir explícitamente entre consistencia estricta (CP) o alta disponibilidad (AP)."
+                )
+            )
+        ),
+        "node-microservices" to TheoryModule(
+            id = "theory-microservices",
+            lessonId = "node-microservices",
+            unitId = "unit-2",
+            title = "Módulo 2: Microservicios y Enrutamiento",
+            moduleType = "MÓDULO TEÓRICO",
+            duration = "6 mins",
+            progressPercent = 0,
+            figureCaption = "Fig. 2.0",
+            figureUrl = "",
+            summary = "La arquitectura de microservicios divide las aplicaciones complejas en servicios independientes pequeños que se comunican a través de APIs bien definidas.",
+            keyConcepts = listOf(
+                KeyConcept(
+                    id = "gateway",
+                    name = "API Gateway",
+                    icon = "router",
+                    color = "#8B5CF6",
+                    explanation = "Punto único de entrada que enruta peticiones, autentica clientes y limita la tasa de peticiones (Rate Limiting)."
+                ),
+                KeyConcept(
+                    id = "decouple",
+                    name = "Desacoplamiento",
+                    icon = "alt_route",
+                    color = "#00FF94",
+                    explanation = "Cada microservicio posee su propia base de datos, evitando dependencias compartidas a nivel de datos."
+                )
+            ),
+            architecturePoints = listOf(
+                ArchitecturePoint(
+                    title = "Comunicación Asíncrona",
+                    detail = "El uso de brokers de mensajes como Kafka o RabbitMQ permite desacoplar los tiempos de procesamiento entre servicios."
+                ),
+                ArchitecturePoint(
+                    title = "Patrón Circuit Breaker",
+                    detail = "Previene fallas en cascada deteniendo temporalmente las peticiones hacia un servicio degradado."
+                )
+            )
+        ),
+        "node-cache" to TheoryModule(
+            id = "theory-cache",
+            lessonId = "node-cache",
+            unitId = "unit-3",
+            title = "Módulo 3: Sistemas de Caché de Alta Concurrencia",
+            moduleType = "MÓDULO TEÓRICO",
+            duration = "4 mins",
+            progressPercent = 0,
+            figureCaption = "Fig. 3.0",
+            figureUrl = "",
+            summary = "El almacenamiento en memoria caché reduce drásticamente la latencia de lectura y protege la base de datos principal contra picos de tráfico.",
+            keyConcepts = listOf(
+                KeyConcept(
+                    id = "lru",
+                    name = "Evicción LRU",
+                    icon = "memory",
+                    color = "#00FF94",
+                    explanation = "Least Recently Used: elimina los elementos menos consultados recientemente cuando la memoria está llena."
+                )
+            ),
+            architecturePoints = listOf(
+                ArchitecturePoint(
+                    title = "Cache Aside",
+                    detail = "La aplicación consulta primero la caché; si hay un 'cache miss', consulta la BD y puebla la caché."
                 )
             )
         )
@@ -394,6 +527,70 @@ object CourseRepository {
                 correctOptionId = "opt-a",
                 explanation = "Al no almacenar estado de sesión localmente, cualquier réplica puede atender la petición de cualquier cliente.",
                 xpReward = 10
+            )
+        ),
+        "node-consensus" to listOf(
+            QuizQuestion(
+                id = "q-raft-1",
+                lessonId = "node-consensus",
+                unitId = "unit-2",
+                question = "1/2: ¿Cuál es el rol principal del nodo Líder en el algoritmo de consenso Raft?",
+                options = listOf(
+                    QuizOption("opt-a", "A", "Aceptar escrituras y coordinar la replicación de logs con los seguidores"),
+                    QuizOption("opt-b", "B", "Eliminar automáticamente los datos antiguos"),
+                    QuizOption("opt-c", "C", "Encriptar la red de telecomunicaciones"),
+                    QuizOption("opt-d", "D", "Rechazar peticiones entrantes")
+                ),
+                correctOptionId = "opt-a",
+                explanation = "El Líder en Raft gestiona las entradas de log recibidas y asegura que se repliquen correctamente en la mayoría de nodos.",
+                xpReward = 15
+            ),
+            QuizQuestion(
+                id = "q-raft-2",
+                lessonId = "node-consensus",
+                unitId = "unit-2",
+                question = "2/2: En sistemas distribuidos con N nodos, ¿cuántas fallas se toleran con quorum de mayoría?",
+                options = listOf(
+                    QuizOption("opt-a", "A", "Menos de la mitad de los nodos (f < N / 2)"),
+                    QuizOption("opt-b", "B", "Casi el 100% de los nodos"),
+                    QuizOption("opt-c", "C", "Cero fallas, todos deben estar activos"),
+                    QuizOption("opt-d", "D", "Exactamente N fallas")
+                ),
+                correctOptionId = "opt-a",
+                explanation = "Para alcanzar consenso por mayoría en un grupo de N nodos, se requiere un quórum de al menos (N/2 + 1) nodos activos.",
+                xpReward = 15
+            )
+        ),
+        "node-concurrency" to listOf(
+            QuizQuestion(
+                id = "q-conc-1",
+                lessonId = "node-concurrency",
+                unitId = "unit-3",
+                question = "1/2: ¿Qué distingue al bloqueo Optimista (Optimistic Locking)?",
+                options = listOf(
+                    QuizOption("opt-a", "A", "No bloquea el registro en lectura, valida la versión al momento de escribir"),
+                    QuizOption("opt-b", "B", "Bloquea la tabla completa durante 1 hora"),
+                    QuizOption("opt-c", "C", "Requiere apagar la base de datos para cada consulta"),
+                    QuizOption("opt-d", "D", "No permite escrituras concurrentes de ningún tipo")
+                ),
+                correctOptionId = "opt-a",
+                explanation = "El bloqueo optimista permite lecturas/escrituras concurrentes y utiliza un número de versión o timestamp para detectar colisiones al guardar.",
+                xpReward = 15
+            ),
+            QuizQuestion(
+                id = "q-conc-2",
+                lessonId = "node-concurrency",
+                unitId = "unit-3",
+                question = "2/2: ¿Qué es una Condición de Carrera (Race Condition)?",
+                options = listOf(
+                    QuizOption("opt-a", "A", "Cuando el resultado depende del orden impredecible de ejecución de hilos concurrentes"),
+                    QuizOption("opt-b", "B", "Un test de velocidad entre dos servidores de red"),
+                    QuizOption("opt-c", "C", "Un fallo de memoria RAM por sobrecalentamiento"),
+                    QuizOption("opt-d", "D", "Un algoritmo de ordenamiento de arreglos")
+                ),
+                correctOptionId = "opt-a",
+                explanation = "Una race condition ocurre cuando dos o más hilos intentan modificar el mismo recurso compartido simultáneamente sin sincronización adecuada.",
+                xpReward = 15
             )
         )
     )
